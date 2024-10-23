@@ -14,7 +14,7 @@ vars:
   local:
     LINUX_SYSTEM_INVENTORY_INTERVAL: The interval to use for inventory data
     LINUX_SYSTEM_AUDIT_MULTICAST: Enables data collection on multicast sockets
-    LINUX_SYSTEM_AUDIT_MITRE: Adds data to map audit events to the MITRE attack framework
+    LINUX_SYSTEM_AUDIT_MITRE: Adds data to map audit events to the MITRE ATT&CK framework
     LINUX_SYSTEM_AUDIT_RULE_FILES: A list of files with auditd rules to load
     LINUX_SYSTEM_HYPERVISOR_VMWARE: Enable this when running on a VMWare hypervisor
       -
