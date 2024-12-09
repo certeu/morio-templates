@@ -28,7 +28,7 @@ about: |-
     - add_fields:
         target: debug
         fields:
-          iteration: "ZA-AH"
+          iteration: "ZA-AI"
 
     - if:
         regexp:
@@ -54,6 +54,14 @@ about: |-
             target: service
             fields:
               name: "Zabbix Agent"
+
+    - timestamp:
+        field: temp_timestamp
+        layouts:
+          - '20060102:150405.999'
+        timezone: Local
+    - drop_fields:
+        fields: temp_timestamp
 
 
 - type: log # Zabbix server logs
@@ -106,6 +114,7 @@ about: |-
         field: temp_timestamp
         layouts:
           - '20060102:150405.999'
+        timezone: Local
     - drop_fields:
         fields: temp_timestamp
 
