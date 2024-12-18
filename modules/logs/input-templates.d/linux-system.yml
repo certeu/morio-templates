@@ -3,16 +3,41 @@ about: |-
   A filebeat module for Linux systems
 
   This collects log data from journald.
+
+  If the logs are to be sent to a Splunk ecosystem, you can set the MORIO_JOURNALD_SPLUNK_INDEX_NAME Morio variable to specify the name of the Splunk index to use.
 {{/MORIO_DOCS}}
 
 {{^MORIO_DOCS}}
-# This module collects all journald data
-- type: journald
+
+- type: journald # This module collects all journald data
   id: journald_everything
   processors:
     - add_fields:
         target: morio
         fields:
           module: {{ MORIO_MODULE_NAME }}
+
+    - rename:
+        fields:
+          - from: "message"
+            to: "event.message"
+
+    - add_fields:
+        target: host
+        fields:
+          id: {{ MORIO_CLIENT_UUID }}
+
+    - add_fields:
+        target: debug
+        fields:
+          iteration: "AAAD"
+
+    {{#MORIO_JOURNALD_SPLUNK_INDEX_NAME }}
+    - add_fields:
+        target: splunk
+        fields:
+          index: {{ MORIO_JOURNALD_SPLUNK_INDEX_NAME }}
+    {{/MORIO_JOURNALD_SPLUNK_INDEX_NAME }}
+
 {{/MORIO_DOCS}}
 
