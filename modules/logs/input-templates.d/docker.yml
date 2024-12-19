@@ -1,0 +1,88 @@
+# This software is provided "as is" and any express or implied warranties, including,
+# but not limited to, the implied warranties of merchantability and fitness for a
+# particular purpose are disclaimed. In no event shall the authors or copyright holders
+# be liable for any claim, damages or other liability, whether in an action of contract,
+# tort or otherwise, arising from, out of or in connection with the software or the use
+# or other dealings in the software.
+#
+# The software is provided under the European Union Public Licence (EUPL) version 1.2;
+# you may not use this file except in compliance with the License. You may obtain a copy
+# of the License at:
+#
+#     https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied. See the License for the specific language governing
+# permissions and limitations under the License.
+
+{{#MORIO_DOCS}}
+about: |-
+  A filebeat module for Linux systems
+
+  This collects log data from the Docker package.
+
+  If the logs are to be sent to a Splunk ecosystem, you can set the MORIO_DOCKER_SPLUNK_INDEX_NAME Morio variable to specify the name of the Splunk index to use.
+{{/MORIO_DOCS}}
+
+{{^MORIO_DOCS}}
+
+- type: log 
+  id: docker_everything
+  paths:
+    - /var/log/tacplus/tac_plus.log
+
+  processors:
+    - add_fields:
+        target: morio
+        fields:
+          module: {{ MORIO_MODULE_NAME }}
+
+    - add_fields:
+        target: host
+        fields:
+          id: {{ MORIO_CLIENT_UUID }}
+
+    - add_fields:
+        target: debug
+        fields:
+          iteration: "DO-AE"
+
+    - add_fields:
+        target: service
+        fields:
+          name: "Docker"
+
+    - dissect:
+        field: "message"
+        tokenizer: "%{temp_timestamp}\t%{client.ip}\t%{client.id}\t%{client.session_name}\t%{server.ip}\t%{event.message}"
+        target_prefix: ''
+        ignore_missing: true
+        ignore_failure: true
+        overwrite_keys: true
+
+    - replace:
+        fields:
+          - field: "event.message"
+            pattern: "\\t"
+            replacement: "  "
+        ignore_missing: true
+        fail_on_error: false
+
+    - timestamp:
+        field: temp_timestamp
+        layouts:
+          - '2006-01-02 15:04:05 -0700'
+        timezone: Local
+    - drop_fields:
+        fields: temp_timestamp
+
+    {{#MORIO_DOCKER_SPLUNK_INDEX_NAME }}
+    - add_fields:
+        target: splunk
+        fields:
+          index: {{ MORIO_DOCKER_SPLUNK_INDEX_NAME }}
+    {{/MORIO_DOCKER_SPLUNK_INDEX_NAME }}
+
+{{/MORIO_DOCS}}
+
