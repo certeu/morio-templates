@@ -2,31 +2,25 @@
 about: |-
   A filebeat module for Linux systems
 
-  This collects log data from the Zabbix package (both from the agent and from the server packages, if installed). 
+  This collects log data from the Zabbix package (both from the agent and from
+  the server packages, if installed).
+vars:
+  defaults:
+    MORIO_ZABBIX_AGENT_LOGS_PATHS: "['/var/log/zabbix-agent/zabbix_agentd.log']"
+    MORIO_ZABBIX_SERVER_LOGS_PATHS: "['/var/log/zabbix/zabbix_server.log']"
+    MORIO_ZABBIX_SPLUNK_INDEX_NAME: false
+  local:
 
-  The path used as a default for agent logs is /var/log/zabbix-agent/zabbix_agentd.log.
-  You can override the default value with the MORIO_ZABBIX_AGENT_LOGS_PATHS environment variable. If you do so, please make sure that it is formatted as a YAML directive starting by four (4) space characters and a dash as in the example below:
-  ```
-  # sudo morio vars set MORIO_ZABBIX_AGENT_LOGS_PATHS '    - /var/log/zabbix-agent/zabbix_agentd.log'
-  ```
-
-  The path used as a default for server logs is /var/log/zabbix/zabbix_server.log.
-  You can override the default value with the MORIO_ZABBIX_SERVER_LOGS_PATHS environment variable and the same syntax rules apply.
-
-  If the logs are to be sent to a Splunk ecosystem, you can set the MORIO_ZABBIX_SPLUNK_INDEX_NAME Morio variable to specify the name of the Splunk index to use.
+    MORIO_ZABBIX_AGENT_LOGS_PATHS: A (glob) list of paths from which to collect Zabbix agent access logs
+    MORIO_ZABBIX_SERVER_LOGS_PATHS: A (glob) list of paths from which to collect Zabbix server access logs
+    MORIO_ZABBIX_SPLUNK_INDEX_NAME: If the logs are to be sent to a Splunk ecosystem, you can set this Morio variable to add a `splunk.index` field to the data, with the value of the variable.
 {{/MORIO_DOCS}}
 
 {{^MORIO_DOCS}}
 
 - type: log # Zabbix agent logs
   id: zabbix_agent
-  paths:
-{{#MORIO_ZABBIX_AGENT_LOGS_PATHS}}
-{{MORIO_ZABBIX_AGENT_LOGS_PATHS}}
-{{/MORIO_ZABBIX_AGENT_LOGS_PATHS}}
-{{^MORIO_ZABBIX_AGENT_LOGS_PATHS}}
-    - /var/log/zabbix-agent/zabbix_agentd.log
-{{/MORIO_ZABBIX_AGENT_LOGS_PATHS}}
+  paths: {{MORIO_ZABBIX_AGENT_LOGS_PATHS}}
 
   processors:
     - add_fields:
@@ -39,10 +33,7 @@ about: |-
         fields:
           id: {{ MORIO_CLIENT_UUID }}
 
-    - add_fields:
-        target: debug
-        fields:
-          iteration: "ZA-AI"
+    - add_id: null
 
     - if:
         regexp:
@@ -80,13 +71,7 @@ about: |-
 
 - type: log # Zabbix server logs
   id: zabbix_server
-  paths:
-{{#MORIO_ZABBIX_SERVER_LOGS_PATHS}}
-{{MORIO_ZABBIX_SERVER_LOGS_PATHS}}
-{{/MORIO_ZABBIX_SERVER_LOGS_PATHS}}
-{{^MORIO_ZABBIX_SERVER_LOGS_PATHS}}
-    - /var/log/zabbix/zabbix_server.log
-{{/MORIO_ZABBIX_SERVER_LOGS_PATHS}}
+  paths: {{MORIO_ZABBIX_SERVER_LOGS_PATHS}}
 
   processors:
     - add_fields:
@@ -99,10 +84,7 @@ about: |-
         fields:
           id: {{ MORIO_CLIENT_UUID }}
 
-    - add_fields:
-        target: debug
-        fields:
-          iteration: "ZS-AA"
+    - add_id: null
 
     - if:
         regexp:

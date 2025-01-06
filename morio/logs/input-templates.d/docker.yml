@@ -4,31 +4,20 @@ about: |-
 
   This collects log data from the Docker package when the logs are in tab-delimited text format.
 
-  The path used as a default for docker logs is /var/lib/docker/containers/*/*-json.log.
-  You can override the default value with the MORIO_DOCKER_TEXT_LOGS_PATHS environment variable. If you do so, please make sure that it is formatted as a YAML directive starting by four (4) space characters and a dash as in the example below:
-  ```
-  # sudo morio vars set MORIO_DOCKER_TEXT_LOGS_PATHS '    - /var/lib/docker/containers/*/*-json.log'
-  ```
-  If you wish to pass several log paths, you can do so by constructing a multiline string. To include another path, add a newline character and start a new line with four (4) space characters and a dash as in the example below:
-  ```
-  # sudo morio vars set MORIO_DOCKER_TEXT_LOGS_PATHS '    - /var/lib/docker/containers/*/*-json.log
-    - /var/lib/docker2/containers/*/*-json.log'
-  ```
-
-  If the logs are to be sent to a Splunk ecosystem, you can set the MORIO_DOCKER_SPLUNK_INDEX_NAME Morio variable to specify the name of the Splunk index to use.
+vars:
+  defaults:
+    MORIO_DOCKER_TEXT_LOGS_PATHS: "['/var/lib/docker/containers/*/*-json.log']"
+    MORIO_DOCKER_SPLUNK_INDEX_NAME: false
+  local:
+    MORIO_DOCKER_TEXT_LOGS_PATHS: A (glob) list of paths from which to collect Apache access logs
+    MORIO_DOCKER_SPLUNK_INDEX_NAME: If the logs are to be sent to a Splunk ecosystem, you can set this Morio variable to add a `splunk.index` field to the data, with the value of the variable.
 {{/MORIO_DOCS}}
 
 {{^MORIO_DOCS}}
 
-- type: log 
+- type: log
   id: docker_everything
-  paths:
-{{#MORIO_DOCKER_TEXT_LOGS_PATHS}}
-{{MORIO_DOCKER_TEXT_LOGS_PATHS}}
-{{/MORIO_DOCKER_TEXT_LOGS_PATHS}}
-{{^MORIO_DOCKER_TEXT_LOGS_PATHS}}
-    - /var/lib/docker/containers/*/*-json.log
-{{/MORIO_DOCKER_TEXT_LOGS_PATHS}}
+  paths: {{MORIO_DOCKER_TEXT_LOGS_PATHS}}
 
   processors:
     - add_fields:
@@ -41,10 +30,7 @@ about: |-
         fields:
           id: {{ MORIO_CLIENT_UUID }}
 
-    - add_fields:
-        target: debug
-        fields:
-          iteration: "DO-AE"
+    - add_id: null
 
     - add_fields:
         target: service

@@ -35,6 +35,11 @@ vars:
         target: morio
         fields:
           module: {{ MORIO_MODULE_NAME }}
+    - add_fields:
+        target: host
+        fields:
+          id: {{ MORIO_CLIENT_UUID }}
+    - add_id: null
 
 - module: system
   period: {{ LINUX_SYSTEM_FILESYSTEM_INTERVAL }}
@@ -47,6 +52,11 @@ vars:
         target: morio
         fields:
           module: {{ MORIO_MODULE_NAME }}
+    - add_fields:
+        target: host
+        fields:
+          id: {{ MORIO_CLIENT_UUID }}
+    - add_id: null
 
 {{#MORIO_TRACK_INVENTORY}}
 - module: system
@@ -63,6 +73,11 @@ vars:
         fields:
           module: {{ MORIO_MODULE_NAME }}
           inventory_update: true
+    - add_fields:
+        target: host
+        fields:
+          id: {{ MORIO_CLIENT_UUID }}
+    - add_id: null
 {{/MORIO_TRACK_INVENTORY}}
 {{/MORIO_DOCS}}
 

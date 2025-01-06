@@ -3,36 +3,24 @@ about: |-
   A filebeat module for Linux systems
 
   This collects log data from the Samba package.
-
-  The path used as a default for samba logs is /var/log/samba/log.*.
-  You can override the default value with the MORIO_SAMBA_LOGS_PATHS environment variable. If you do so, please make sure that it is formatted as a YAML directive starting by four (4) space characters and a dash as in the example below:
-  ```
-  # sudo morio vars set MORIO_SAMBA_LOGS_PATHS '    - /var/log/samba/log.*'
-  ```
-  If you wish to pass several log paths, you can do so by constructing a multiline string. To include another path, add a newline character and start a new line with four (4) space characters and a dash as in the example below:
-  ```
-  # sudo morio vars set MORIO_SAMBA_LOGS_PATHS '    - /var/log/samba/log.*
-    - /var/log2/samba/log.*'
-  ```
-
-  If the logs are to be sent to a Splunk ecosystem, you can set the MORIO_SAMBA_SPLUNK_INDEX_NAME Morio variable to specify the name of the Splunk index to use.
+vars:
+  defaults:
+    MORIO_SAMBA_LOGS_PATHS:  "['/var/log/samba/log.*']"
+    MORIO_SAMBA_SPLUNK_INDEX_NAME: false
+  local:
+    MORIO_SAMBA_LOGS_PATHS: A (glob) list of paths from which to collect Samba logs
+    MORIO_SAMBA_SPLUNK_INDEX_NAME: If the logs are to be sent to a Splunk ecosystem, you can set this Morio variable to add a `splunk.index` field to the data, with the value of the variable.
 {{/MORIO_DOCS}}
 
 {{^MORIO_DOCS}}
 
-- type: log 
+- type: log
   id: samba_everything
   multiline.pattern: '^\['
   multiline.negate: true
   multiline.match: after
   multiline.skip_newline: true
-  paths:
-{{#MORIO_SAMBA_LOGS_PATHS}}
-{{MORIO_SAMBA_LOGS_PATHS}}
-{{/MORIO_SAMBA_LOGS_PATHS}}
-{{^MORIO_SAMBA_LOGS_PATHS}}
-    - /var/log/samba/log.*
-{{/MORIO_SAMBA_LOGS_PATHS}}
+  paths: {{MORIO_SAMBA_LOGS_PATHS}}
 
   processors:
     - add_fields:
@@ -46,14 +34,11 @@ about: |-
           id: {{ MORIO_CLIENT_UUID }}
 
     - add_fields:
-        target: debug
-        fields:
-          iteration: "SA-AD"
-
-    - add_fields:
         target: service
         fields:
           name: "Samba"
+
+    - add_id: null
 
     - dissect:
         field: "message"

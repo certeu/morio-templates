@@ -268,7 +268,7 @@
 -a always,exit -F arch=b32 -S rmdir -S unlink -S unlinkat -S rename -S renameat -F auid=0{{#LINUX_SYSTEM_AUDIT_MITRE}} -k T1070_Indicator_Removal_on_Host{{/LINUX_SYSTEM_AUDIT_MITRE}}
 -a always,exit -F arch=b64 -S rmdir -S unlink -S unlinkat -S rename -S renameat -F auid=0{{#LINUX_SYSTEM_AUDIT_MITRE}} -k T1070_Indicator_Removal_on_Host{{/LINUX_SYSTEM_AUDIT_MITRE}}
 
-#Log all commands (Be carefull, this will generate a lot of data)
+#Log all commands (Be careful, this will generate a lot of data)
 #-a exit,always -F arch=b64 -S execve{{#LINUX_SYSTEM_AUDIT_MITRE}} -k T1059_CommandLine_Interface{{/LINUX_SYSTEM_AUDIT_MITRE}}
 #-a exit,always -F arch=b32 -S execve{{#LINUX_SYSTEM_AUDIT_MITRE}} -k T1059_CommandLine_Interface{{/LINUX_SYSTEM_AUDIT_MITRE}}
 

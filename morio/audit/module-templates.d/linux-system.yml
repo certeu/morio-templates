@@ -17,7 +17,6 @@ vars:
     LINUX_SYSTEM_AUDIT_MITRE: Adds data to map audit events to the MITRE ATT&CK framework
     LINUX_SYSTEM_AUDIT_RULE_FILES: A list of files with auditd rules to load
     LINUX_SYSTEM_HYPERVISOR_VMWARE: Enable this when running on a VMWare hypervisor
-      -
   global:
     - MORIO_TRACK_INVENTORY
 {{/MORIO_DOCS}}
@@ -28,12 +27,12 @@ vars:
   socket_type: multicast
 {{/LINUX_SYSTEM_AUDIT_MULTICAST}}
   audit_rules: |
-    -w /etc/morio/audit/config.yaml
-    -w /etc/morio/logs/config.yaml
-    -w /etc/morio/audit/modules.d/*.yaml
+    -w /etc/morio/audit/config.yml
+    -w /etc/morio/logs/config.yml
+    -w /etc/morio/audit/modules.d/*.yml
     -w /etc/morio/audit/rules.d/*.rules
-    -w /etc/morio/logs/modules.d/*.yaml
-    -w /etc/morio/logs/inputs.d/*.yaml
+    -w /etc/morio/logs/modules.d/*.yml
+    -w /etc/morio/logs/inputs.d/*.yml
   audut_rule_files: {{{ LINUX_SYSTEM_AUDIT_RULE_FILES }}}
   ignore_errors: false
   processors:
@@ -41,13 +40,18 @@ vars:
         target: morio
         fields:
           module: {{ MORIO_MODULE_NAME }}
+    - add_fields:
+        target: host
+        fields:
+          id: {{ MORIO_CLIENT_UUID }}
+    - add_id: null
 
 - module: system
   datasets:
     - login
     - user
   period: 300s
-  state.period: 24h
+  state.period: 8h
   login.wtmp_file_pattern: /var/log/wtmp*
   login.btmp_file_pattern: /var/log/btmp*
   user.detect_password_changes: true
@@ -56,6 +60,11 @@ vars:
         target: morio
         fields:
           module: {{ MORIO_MODULE_NAME }}
+    - add_fields:
+        target: host
+        fields:
+          id: {{ MORIO_CLIENT_UUID }}
+    - add_id: null
 
 {{#MORIO_TRACK_INVENTORY}}
 - module: system
@@ -72,6 +81,13 @@ vars:
         target: morio
         fields:
           module: {{ MORIO_MODULE_NAME }}
+    - add_fields:
+        target: host
+        fields:
+          id: {{ MORIO_CLIENT_UUID }}
+    - add_id: null
+    - add_locale:
+        format: abbreviation
 {{/MORIO_TRACK_INVENTORY}}
 {{/MORIO_DOCS}}
 

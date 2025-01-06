@@ -5,38 +5,38 @@ about: |-
   This collects log data from journald.
 
   If the logs are to be sent to a Splunk ecosystem, you can set the MORIO_JOURNALD_SPLUNK_INDEX_NAME Morio variable to specify the name of the Splunk index to use.
+vars:
+  defaults:
+    MORIO_JOURNALD_SPLUNK_INDEX_NAME: false
+  local:
+    MORIO_JOURNALD_SPLUNK_INDEX_NAME: If the logs are to be sent to a Splunk ecosystem, you can set this Morio variable to add a `splunk.index` field to the data, with the value of the variable.
 {{/MORIO_DOCS}}
 
 {{^MORIO_DOCS}}
-
 - type: journald # This module collects all journald data
   id: journald_everything
   processors:
+    - decode_json_fields:
+        fields: ["message"]
+        process_array: false
+        max_depth: 2
+        target: "message_json"
+        overwrite_keys: false
+        add_error_key: false
     - add_fields:
         target: morio
         fields:
           module: {{ MORIO_MODULE_NAME }}
-
-    - rename:
-        fields:
-          - from: "message"
-            to: "event.message"
-
     - add_fields:
         target: host
         fields:
           id: {{ MORIO_CLIENT_UUID }}
-
-    - add_fields:
-        target: debug
-        fields:
-          iteration: "LS-AA"
+    - add_id: null
     {{#MORIO_JOURNALD_SPLUNK_INDEX_NAME }}
     - add_fields:
         target: splunk
         fields:
           index: {{ MORIO_JOURNALD_SPLUNK_INDEX_NAME }}
     {{/MORIO_JOURNALD_SPLUNK_INDEX_NAME }}
-
 {{/MORIO_DOCS}}
 
