@@ -31,7 +31,6 @@ about: |-
         target: debug
         fields:
           iteration: "LS-AA"
-
     {{#MORIO_JOURNALD_SPLUNK_INDEX_NAME }}
     - add_fields:
         target: splunk
