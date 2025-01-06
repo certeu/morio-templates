@@ -1,26 +1,19 @@
-# This software is provided "as is" and any express or implied warranties, including,
-# but not limited to, the implied warranties of merchantability and fitness for a
-# particular purpose are disclaimed. In no event shall the authors or copyright holders
-# be liable for any claim, damages or other liability, whether in an action of contract,
-# tort or otherwise, arising from, out of or in connection with the software or the use
-# or other dealings in the software.
-#
-# The software is provided under the European Union Public Licence (EUPL) version 1.2;
-# you may not use this file except in compliance with the License. You may obtain a copy
-# of the License at:
-#
-#     https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
-#
-# Unless required by applicable law or agreed to in writing, software distributed under
-# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied. See the License for the specific language governing
-# permissions and limitations under the License.
-
 {{#MORIO_DOCS}}
 about: |-
   A filebeat module for Linux systems
 
   This collects log data from the Samba package.
+
+  The path used as a default for samba logs is /var/log/samba/log.*.
+  You can override the default value with the MORIO_SAMBA_LOGS_PATHS environment variable. If you do so, please make sure that it is formatted as a YAML directive starting by four (4) space characters and a dash as in the example below:
+  ```
+  # sudo morio set MORIO_SAMBA_LOGS_PATHS '    - /var/log/samba/log.*'
+  ```
+  If you wish to pass several log paths, you can do so by constructing a multiline string. To include another path, add a newline character and start a new line with four (4) space characters and a dash as in the example below:
+  ```
+  # sudo morio set MORIO_SAMBA_LOGS_PATHS '    - /var/log/samba/log.*
+    - /var/log2/samba/log.*'
+  ```
 
   If the logs are to be sent to a Splunk ecosystem, you can set the MORIO_SAMBA_SPLUNK_INDEX_NAME Morio variable to specify the name of the Splunk index to use.
 {{/MORIO_DOCS}}
@@ -29,12 +22,17 @@ about: |-
 
 - type: log 
   id: samba_everything
-  paths:
-    - /var/log/samba/log.*
   multiline.pattern: '^\['
   multiline.negate: true
   multiline.match: after
   multiline.skip_newline: true
+  paths:
+{{#MORIO_SAMBA_LOGS_PATHS}}
+{{MORIO_SAMBA_LOGS_PATHS}}
+{{/MORIO_SAMBA_LOGS_PATHS}}
+{{^MORIO_SAMBA_LOGS_PATHS}}
+    - /var/log/samba/log.*
+{{/MORIO_SAMBA_LOGS_PATHS}}
 
   processors:
     - add_fields:
