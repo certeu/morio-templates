@@ -29,6 +29,11 @@ vars:
           module: {{ MORIO_MODULE_NAME }}
 
     - add_fields:
+        target: morio
+        fields:
+          module_version: "ZA-AA"
+
+    - add_fields:
         target: host
         fields:
           id: {{ MORIO_CLIENT_UUID }}
@@ -78,6 +83,11 @@ vars:
         target: morio
         fields:
           module: {{ MORIO_MODULE_NAME }}
+
+    - add_fields:
+        target: morio
+        fields:
+          module_version: "ZS-AA"
 
     - add_fields:
         target: host
