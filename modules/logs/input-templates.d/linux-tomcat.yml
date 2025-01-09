@@ -5,8 +5,8 @@ about: |-
   This collects access and error log data from the Apache Tomcat package.
   It autodetects and supports the following log file types and formats:
 
-  - access: access log file, using the default logging pattern
-  - catalina: global log file for server admin operations, usig the default logging pattern
+  - access: access log files using the default Tomcat single line logging pattern
+  - catalina: operations log files using the default Catalina multiline logging pattern
 
 vars:
   defaults:
