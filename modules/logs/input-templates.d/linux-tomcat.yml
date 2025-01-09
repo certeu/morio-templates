@@ -26,7 +26,6 @@ vars:
 - type: filestream # This collects catalina logs
   id: tomcat_catalina_default
   paths: {{{MORIO_TOMCAT_CATALINA_LOGS_PATHS}}}
-  buffer_size: 100MB # This avoids breaking multiline events because of a buffer overflow
 
   parsers:
     - multiline:
