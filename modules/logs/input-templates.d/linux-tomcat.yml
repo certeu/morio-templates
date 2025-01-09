@@ -39,10 +39,7 @@ vars:
         target: morio
         fields:
           module: {{MORIO_MODULE_NAME}}
-    - add_fields:
-        target: morio
-        fields:
-          module_version: "TC-AB"
+          module_version: "TC-AC"
     - add_fields:
         target: host
         fields:
@@ -51,7 +48,7 @@ vars:
 
     - dissect:
         field: "message"
-        tokenizer: "%{+temp_timestamp} %{+temp_timestamp} %{log.level} [%{http.thread}] %{log.logger} %{event.message}"
+        tokenizer: "%{+timestamp} %{+timestamp} %{log.level} [%{http.thread}] %{log.logger} %{event.message}"
         target_prefix: ''
         ignore_missing: true
         ignore_failure: true
@@ -62,12 +59,10 @@ vars:
           detected_format: "catalina_default"
 
     - timestamp:
-        field: temp_timestamp
+        field: timestamp
         layouts:
           - '02-Jan-2006 15:04:05.999'
         timezone: Local
-    - drop_fields:
-        fields: temp_timestamp
 
 
 - type: filestream # This collects access logs
@@ -82,7 +77,7 @@ vars:
     - add_fields:
         target: morio
         fields:
-          module_version: "TA-AA"
+          module_version: "TA-AC"
     - add_fields:
         target: host
         fields:
@@ -96,7 +91,7 @@ vars:
       then:
         - dissect:
             field: "message"
-            tokenizer: "[%{temp_timestamp}] %{http.username} %{http.thread} %{source.ip} %{http.request.method} %{url.full} %{http.version} %{http.response.status_code} %{http.response.time} %{http.response.body.bytes} %{http.request.referrer} %{user_agent.original}"
+            tokenizer: "[%{timestamp}] %{http.username} %{http.thread} %{source.ip} %{http.request.method} %{url.full} %{http.version} %{http.response.status_code} %{http.response.time} %{http.response.body.bytes} %{http.request.referrer} %{user_agent.original}"
             target_prefix: ''
             ignore_missing: true
             ignore_failure: true
@@ -107,11 +102,9 @@ vars:
               detected_format: "access_default"
 
     - timestamp:
-        field: temp_timestamp
+        field: timestamp
         layouts:
           - '02/Jan/2006:15:04:05 -0700'
-    - drop_fields:
-        fields: temp_timestamp
 
     {{#MORIO_TOMCAT_SPLUNK_INDEX_NAME}}
     - add_fields:
