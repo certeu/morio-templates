@@ -96,7 +96,29 @@ export const info = {
 It can cache recent log data, as well as eventify them for event-driven automation.
 It also supports dynamic loading of module-specific logic.`,
   settings: {
-    topics: ['logs'],
+    enabled: {
+      title: 'Enable logs stream processor',
+      dflt: true,
+      type: 'list',
+      list: [
+        {
+          val: false,
+          label: 'Disabled',
+          about: 'Select this to completely disabled this stream processor',
+        },
+        {
+          val: true,
+          label: 'Enabled',
+          about: 'Select this to enable this stream processor',
+        },
+      ]
+    },
+    topics: {
+      dflt: ['logs'],
+      title: 'List of topics to subscribe to',
+      about: `Changing this from the default \`logs\` is risky`,
+      type: 'labels',
+    },
     cache: {
       dflt: true,
       title: 'Cache log data',

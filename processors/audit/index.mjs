@@ -49,7 +49,27 @@ export const info = {
 It can cache recent audit events, as well as enventify them for event-driven automation.
 It also supports dynamic loading of module-specific logic.`,
   settings: {
-    topics: ['audit'],
+    enabled: {
+      title: 'Enable audit stream processor',
+      dflt: true,
+      type: 'list',
+      list: [
+        {
+          val: false,
+          label: 'Disabled'
+        },
+        {
+          val: true,
+          label: 'Enabled'
+        },
+      ]
+    },
+    topics: {
+      dflt: ['audit'],
+      title: 'List of topics to subscribe to',
+      about: 'FIXME - description goes here',
+      type: 'labels',
+    },
     cache: {
       dflt: true,
       title: 'Cache audit data',

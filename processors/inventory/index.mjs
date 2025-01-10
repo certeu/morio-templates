@@ -263,6 +263,28 @@ export const info = {
 
 It can only be enabled or disabled, and requires no configuration.`,
   settings: {
-    topics: ['audit', 'inventory', 'metrics'],
+    enabled: {
+      title: 'Enable inventory stream processor',
+      dflt: true,
+      type: 'list',
+      list: [
+        {
+          val: false,
+          label: 'Disabled',
+          about: 'Select this to completely disabled this stream processor',
+        },
+        {
+          val: true,
+          label: 'Enabled',
+          about: 'Select this to enable this stream processor',
+        },
+      ]
+    },
+    topics: {
+      dflt: ['audit', 'inventory', 'metrics'],
+      title: 'List of topics to subscribe to',
+      about: `Changing this from the default list (audit, inventory, metrics) is risky`,
+      type: 'labels',
+    },
   }
 }
