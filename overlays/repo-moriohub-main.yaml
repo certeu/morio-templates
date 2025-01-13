@@ -1,0 +1,4 @@
+merge:
+  preseed.git.moriohub:
+    url: "https://github.com/certeu/moriohub.git"
+    ref: main

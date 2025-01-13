@@ -1,9 +1,9 @@
 - moriodata:
-    docs: Collects log data from journald on Linux
-    href: "https://github.com/certeu/moriohub/blob/develop/modules/logs/input-templates.d/linux-system.yml"
-    version: 20250110
+    info: "Collects log data from journald on Linux systems"
+    href: "https://morio.it/hub/modules/logs/linux-system"
+    version: 1
 
-- type: journald
+- type: journald # This collects all journald data
   id: journald_everything
   processors:
     - decode_json_fields:

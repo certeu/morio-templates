@@ -1,21 +1,16 @@
-{{#MORIO_DOCS}}
-about: |-
-  A filebeat module for Linux systems
-
-  This collects log data from the Samba package.
-vars:
-  defaults:
-    MORIO_SAMBA_LOGS_PATHS: "['/var/log/samba/log.*']"
-    MORIO_SAMBA_SPLUNK_INDEX_NAME: false
-  local:
-    MORIO_SAMBA_LOGS_PATHS: A (glob) list of paths from which to collect Samba logs
-    MORIO_SAMBA_SPLUNK_INDEX_NAME: If the logs are to be sent to a Splunk ecosystem, you can set this Morio variable to add a `splunk.index` field to the data, with the value of the variable.
-{{/MORIO_DOCS}}
-
-{{^MORIO_DOCS}}
+- moriodata:
+    info: "Collects log data from Samba on Linux systems"
+    href: "https://morio.it/hub/modules/logs/linux-samba"
+    vars:
+      LOGS_LINUX_SAMBA_LOG_PATHS:
+        dflt:
+          - /var/log/samba/log.*
+        info: A (glob) list of paths from which to collect Samba logs
+    version: 1
 
 - type: filestream
   id: samba_everything
+<<<<<<< Updated upstream:modules/logs/input-templates.d/samba.yml
   multiline.pattern: '^\['
   multiline.negate: true
   multiline.match: after
@@ -44,6 +39,18 @@ vars:
           name: "Samba"
 
     - add_id: null
+=======
+  parsers:
+    - multiline:
+        type: pattern
+        pattern: '^\['
+        negate: true
+        match: after
+        skip_newline: true
+  paths: {{{ LOGS_LINUX_SAMBA_LOG_PATHS}}}
+
+  processors:
+>>>>>>> Stashed changes:modules/logs/input-templates.d/linux-samba.yml
 
     - dissect:
         field: "message"
@@ -61,13 +68,4 @@ vars:
         timezone: Local
     - drop_fields:
         fields: temp_timestamp
-
-    {{#MORIO_SAMBA_SPLUNK_INDEX_NAME }}
-    - add_fields:
-        target: splunk
-        fields:
-          index: {{ MORIO_SAMBA_SPLUNK_INDEX_NAME }}
-    {{/MORIO_SAMBA_SPLUNK_INDEX_NAME }}
-
-{{/MORIO_DOCS}}
 

@@ -1,0 +1,69 @@
+- moriodata:
+    info: "Collects log data from Tomcat on Linux systems"
+    href: "https://morio.it/hub/modules/logs/linux-tomcat"
+    vars:
+      LOGS_LINUX_TOMCAT_ACCESS_LOG_PATHS:
+        dflt:
+          - /usr/local/tomcat/logs/*access*.log
+        info: A list of (glob) paths from which to collect Apache Tomcat access logs
+      LOGS_LINUX_TOMCAT_CATALINA_LOG_PATHS:
+        dflt:
+          - /usr/local/tomcat/logs/catalina*.log
+        info: A list of (glob) paths from which to collect Apache Tomcat catalina logs
+    version: 1
+
+
+# This collects catalina logs
+- type: filestream
+  id: tomcat_catalina_default
+  paths: {{{ LOGS_LINUX_TOMCAT_CATALINA_LOG_PATHS }}}
+  parsers:
+    - multiline:
+        type: pattern
+        pattern: '^\d{2}-[a-zA-Z]{3}-\d{4}'
+        negate: true
+        match: after
+
+  processors:
+
+    - dissect:
+        field: "message"
+        tokenizer: "%{+timestamp} %{+timestamp} %{log.level} [%{http.thread}] %{log.logger} %{event.message}"
+        target_prefix: ''
+        ignore_missing: true
+        ignore_failure: true
+        overwrite_keys: true
+
+    - timestamp:
+        field: timestamp
+        layouts:
+          - '02-Jan-2006 15:04:05.999'
+        timezone: Local
+
+
+# This collects access logs
+- type: filestream
+  id: tomcat_access_default
+  paths: {{{ LOGS_LINUX_TOMCAT_ACCESS_LOG_PATHS }}}
+
+  processors:
+
+    - if:
+        regexp:
+            message: '^\[\d{2}\/[a-zA-Z]{3}\/\d{4}:\d{2}:\d{2}:\d{2}\s.\d{4}\]\s' # access log valve default logging pattern
+      then:
+        - dissect:
+            field: "message"
+            tokenizer: "[%{timestamp}] %{http.username} %{http.thread} %{source.ip} %{http.request.method} %{url.full} %{http.version} %{http.response.status_code} %{http.response.time} %{http.response.body.bytes} %{http.request.referrer} %{user_agent.original}"
+            target_prefix: ''
+            ignore_missing: true
+            ignore_failure: true
+            overwrite_keys: true
+        - add_labels:
+            labels:
+              detected_log_format: "access_default"
+
+    - timestamp:
+        field: timestamp
+        layouts:
+          - '02/Jan/2006:15:04:05 -0700'
