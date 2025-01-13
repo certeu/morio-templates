@@ -1,7 +1,9 @@
 merge:
-  - iam.providers.apikey:
-      provider: apikey
-      id: apikey
-      label: API Key
-  - iam.ui.visibility.apikey: icon
-
+  iam:
+    providers:
+      apikey:
+        label: API Key
+        provider: apikey
+   ui:
+      visibility:
+        apikey: icon

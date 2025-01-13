@@ -1,4 +1,6 @@
 merge:
-  preseed.git.moriohub:
-    url: "https://github.com/certeu/moriohub.git"
-    ref: develop
+  preseed:
+    git:
+      moriohub:
+        url: "https://github.com/certeu/moriohub.git"
+        ref: develop

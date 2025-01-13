@@ -1,7 +1,11 @@
 merge:
-  - iam.providers.local:
-      provider: local
-      id: local
-      label: Morio Account
-  - iam.ui.visibility.local: icon
+  iam:
+    providers:
+      local:
+        provider: local
+        id: local
+        label: Morio Account
+    ui:
+      visibility:
+        local: icon
 
