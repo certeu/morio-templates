@@ -61,7 +61,7 @@
             overwrite_keys: true
         - add_labels:
             labels:
-              detected_log_format: "access_default"
+              log.format: "access_default"
 
     - timestamp:
         field: timestamp

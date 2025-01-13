@@ -34,7 +34,7 @@
             fail_on_error: false
         - add_labels:
             labels:
-              detected_log_format: "json"
+              log.format: "json"
       else:
         - dissect:
             field: "message"
@@ -52,7 +52,7 @@
             fail_on_error: false
         - add_labels:
             labels:
-              detected_log_format: "tsv"
+              log.format: "tsv"
 
     - timestamp:
         field: temp_timestamp

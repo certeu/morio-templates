@@ -30,7 +30,7 @@
             overwrite_keys: true
         - add_labels:
             labels:
-              detected_log_format: "default"
+              log.format: "default"
 
     - timestamp:
         field: temp_timestamp
@@ -63,7 +63,7 @@
                 overwrite_keys: true
             - add_labels:
                 labels:
-                  detected_log_format: "common"
+                  log.format: "common"
           else:
             - dissect:
                 field: "message"
@@ -74,7 +74,7 @@
                 overwrite_keys: true
             - add_labels:
                 labels:
-                  detected_log_format: "common_incomplete"
+                  log.format: "common_incomplete"
 
     - if:
         regexp:
@@ -93,7 +93,7 @@
                 overwrite_keys: true
             - add_labels:
                 labels:
-                  detected_log_format: "combined"
+                  log.format: "combined"
           else:
             - dissect:
                 field: "message"
@@ -104,7 +104,7 @@
                 overwrite_keys: true
             - add_labels:
                 labels:
-                  detected_log_format: "combined_incomplete"
+                  log.format: "combined_incomplete"
 
     - if:
         regexp:
@@ -123,7 +123,7 @@
                 overwrite_keys: true
             - add_labels:
                 labels:
-                  detected_log_format: "vhost_combined"
+                  log.format: "vhost_combined"
           else:
             - dissect:
                 field: "message"
@@ -134,7 +134,7 @@
                 overwrite_keys: true
             - add_labels:
                 labels:
-                  detected_log_format: "vhost_combined_incomplete"
+                  log.format: "vhost_combined_incomplete"
 
     - timestamp:
         field: temp_timestamp
