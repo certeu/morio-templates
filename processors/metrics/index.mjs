@@ -40,7 +40,7 @@ export default function metricsStreamProcessor (data, tools, topic) {
 /*
  * This is used for both the UI and to generate the default settings
  */
-export const info = {
+export const _info = {
   title: 'Metrics stream processor',
   about: `This stream processor will process metrics data flowing through your Morio collector.
 
