@@ -48,7 +48,6 @@ export const info = {
 //It can cache recent metrics, as well as enventify them for event-driven automation.
 //It also supports dynamic loading of module-specific logic.`,
   settings: {
-    enabled: true,
     topics: ['metrics'],
     cache: {
       dflt: true,

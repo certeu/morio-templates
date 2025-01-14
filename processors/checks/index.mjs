@@ -150,29 +150,7 @@ It can cache recent health check data, as well as enventify them for event-drive
 It also supports verifying the expiry of TLS certificates.
 `,
   settings: {
-    enabled: {
-      title: 'Enable health checks stream processor',
-      dflt: true,
-      type: 'list',
-      list: [
-        {
-          val: false,
-          label: 'Disabled',
-          about: 'Select this to completely disabled this stream processor',
-        },
-        {
-          val: true,
-          label: 'Enabled',
-          about: 'Select this to enable this stream processor',
-        },
-      ]
-    },
-    topics: {
-      dflt: ['checks'],
-      title: 'List of topics to subscribe to',
-      about: `Changing this from the default \`checks\` is risky`,
-      type: 'labels',
-    },
+    topics: ['checks'],
     cache: {
       dflt: true,
       title: 'Cache health check data',

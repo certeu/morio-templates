@@ -49,29 +49,7 @@ export const info = {
 
 It can cache recent events, and supports dynamic loading of module-specific logic.`,
   settings: {
-    enabled: {
-      title: 'Enable events stream processor',
-      dflt: true,
-      type: 'list',
-      list: [
-        {
-          val: false,
-          label: 'Disabled',
-          about: 'Select this to completely disabled this stream processor',
-        },
-        {
-          val: true,
-          label: 'Enabled',
-          about: 'Select this to enable this stream processor',
-        },
-      ]
-    },
-    topics: {
-      dflt: ['events'],
-      title: 'List of topics to subscribe to',
-      about: `Changing this from the default \`events\` is risky`,
-      type: 'labels',
-    },
+    topics: ['events'],
     cache: {
       dflt: true,
       title: 'Cache event data',
