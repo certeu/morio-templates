@@ -143,8 +143,7 @@ const checkCertificateExpiry = (data, tools) => {
  * This is used for both the UI and to generate the default settings
  */
 export const info = {
-  title: 'Health checks stream processor',
-  about: `This stream processor will process health check data flowing through your Morio collection.
+  docs: `This stream processor will process health check data flowing through your Morio collection.
 
 It can cache recent health check data, as well as enventify them for event-driven automation.
 It also supports verifying the expiry of TLS certificates.

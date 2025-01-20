@@ -44,8 +44,7 @@ export default function eventsStreamProcessor (data, tools, topic) {
  * This is used for both the UI and to generate the default settings
  */
 export const info = {
-  title: 'Event data stream processor',
-  about: `This stream processor will process event data flowing through your Morio collection.
+  docs: `This stream processor will process event data flowing through your Morio collection.
 
 It can cache recent events, and supports dynamic loading of module-specific logic.`,
   settings: {

@@ -17,8 +17,7 @@ export default function morioTapMetrics (data={}, tools) {
 }
 
 export const info = {
-  name: 'Metrics stream plugin: morio-tap',
-  about: `This stream processor plugin will process metrics data from the morio-tap module.`,
+  docs: `This stream processor plugin will process metrics data from the morio-tap module.`,
   settings: {
     test: {
       dflt: 666,
