@@ -49,7 +49,7 @@ function auditProcessor (data, tools, topic) {
  * @param {string} topic - The topic the data came from
  */
 function inventoryProcessor (data, tools, topic) {
-  if (data.morio.inventory_update) tools.inventory.host.update(data, tools)
+  if (tools.get(data, ['labels', 'inventory.update'], false)) tools.inventory.host.update(data, tools)
 }
 
 /*
@@ -65,7 +65,7 @@ function metricsProcessor (data, tools, topic) {
   /*
    * Only process inventory updates
    */
-  if (!data.morio?.inventory_update) return
+  if (!tools.get(data, ['labels', 'inventory.update'], false)) return
 
   /*
    * Do not process hosts that lack an ID
@@ -76,21 +76,22 @@ function metricsProcessor (data, tools, topic) {
    * Only process hosts when we know how to
    * transform data from the Morio module that generated it
    */
-  if (!data?.morio?.module || typeof extractInventoryDataFromMetrics[data.morio.module] !== 'function') return
+  const module = tools.get(data,['labels', 'morio.module'], false)
+  if (!module || typeof extractInventoryDataFromMetrics[module] !== 'function') return
 
   /*
    * Transform host data
    */
-  const host = extractInventoryDataFromMetrics[data.morio.module](data, tools)
+  const host = extractInventoryDataFromMetrics[module](data, tools)
 
   /*
    * Only update if we have data
    */
   if (host) tools.produce.inventoryUpdate({
     host,
-    morio: {
-      inventory_update: true,
-      module: data.morio.module,
+    labels: {
+      'inventory.update': true,
+      'morio.module': module
     }
   })
 }

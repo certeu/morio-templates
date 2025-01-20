@@ -22,11 +22,12 @@ export default function auditStreamProcessor (data, tools, topic) {
   /*
    * Hand over to module-specific logic
    */
-  if (data?.morio?.module && typeof modules[data.morio.module] === 'function') {
+  const module = tools.get(data,['labels', 'morio.module'], false)
+  if (module && typeof modules[module] === 'function') {
     /*
      * Hand of to module-specific code to determine what to do
      */
-    const result = modules[data.morio.module](data, tools)
+    const result = modules[module](data, tools)
 
     /*
      * Only update if we get data back from the module code
@@ -34,7 +35,7 @@ export default function auditStreamProcessor (data, tools, topic) {
     if (result) tools.cache.audit(result)
   }
   else if (tools.getSettings('tap.processors.audit.log_unhandled', false)) {
-    tools.note(`[metrics] Cannot handle message`, data)
+    tools.note(`[audit] Cannot process message`, data)
   }
 
 }

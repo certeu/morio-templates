@@ -47,11 +47,12 @@ export default function logsStreamProcessor (data, tools, topic) {
   /*
    * Hand over to module-specific logic
    */
-  if (data?.morio?.module && typeof modules[data.morio.module] === 'function') {
+  const module = tools.get(data,['labels', 'morio.module'], false)
+  if (module && typeof modules[module] === 'function') {
     let logset = false
     let logline = false
     try {
-      [logset, logline] = modules[data.morio.module](data, tools)
+      [logset, logline] = modules[module](data, tools)
       if (tools.getSettings('tap.logs.cache', false)) {
         // If the module returned logset and logline, cache
         if (logset && logline) tools.cache.logline(logset, logline, data, tools.getSettings('tap.logs', {}))
@@ -60,7 +61,7 @@ export default function logsStreamProcessor (data, tools, topic) {
           [logset, logline] = defaultLogCaching(data, tools)
           if (logset && logline) tools.cache.logline(logset, logline, data, tools.getSettings('tap.logs', {}))
           else if (tools.getSettings('tap.logs.log_unhandled', {})) {
-            tools.note(`[logs] Cannot handle message (module)`, data)
+            tools.note(`[logs] Cannot process message (${module})`, data)
           }
         }
       }

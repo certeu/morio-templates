@@ -22,21 +22,22 @@ export default function eventsStreamProcessor (data, tools, topic) {
   /*
    * Create note when host ID is missing
    */
-  if (!data.host.id) tools.note(`[event] Host lacks ID: : ${JSON.stringify(data)}`)
+  if (!tools.get(data, 'host.id', false)) tools.note(`[event] Host lacks ID: : ${JSON.stringify(data)}`)
 
   /*
    * Hand over to module-specific logic
    */
-  if (data?.morio?.module && typeof modules[data.morio.module] === 'function') {
+  const module = tools.get(data,['labels', 'morio.module'], false)
+  if (module && typeof modules[module] === 'function') {
     try {
-      modules[data.morio.module](data, tools)
+      modules[module](data, tools)
     }
     catch(err) {
       tools.note(`[event] Error in module logic`, { err, data })
     }
   }
   else if (tools.getSettings('tap.events.log_unhandled', false)) {
-    tools.note(`[event] Cannot handle message`, data)
+    tools.note(`[event] Cannot process message (${module})`, data)
   }
 }
 
