@@ -45,7 +45,7 @@ export const info = {
   title: 'Metrics stream processor',
   about: `This stream processor will process metrics data flowing through your Morio collector.
 
-It can cache recent metrics, as well as enventify them for event-driven automation.
+It can cache recent metrics as well as eventify them for event-driven automation.
 It also supports dynamic loading of module-specific logic.`,
   settings: {
     topics: ['metrics'],
