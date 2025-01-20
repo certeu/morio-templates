@@ -28,17 +28,19 @@
 
     - dissect:
         field: "message"
-        tokenizer: "%{+timestamp} %{+timestamp} %{log.level} [%{http.thread}] %{log.logger} %{event.message}"
+        tokenizer: "%{+temp_timestamp} %{+temp_timestamp} %{log.level} [%{http.thread}] %{log.logger} %{event.message}"
         target_prefix: ''
         ignore_missing: true
         ignore_failure: true
         overwrite_keys: true
 
     - timestamp:
-        field: timestamp
+        field: temp_timestamp
         layouts:
           - '02-Jan-2006 15:04:05.999'
         timezone: Local
+    - drop_fields:
+        fields: temp_timestamp
 
 
 # This collects access logs
@@ -54,7 +56,7 @@
       then:
         - dissect:
             field: "message"
-            tokenizer: "[%{timestamp}] %{http.username} %{http.thread} %{source.ip} %{http.request.method} %{url.full} %{http.version} %{http.response.status_code} %{http.response.time} %{http.response.body.bytes} %{http.request.referrer} %{user_agent.original}"
+            tokenizer: "[%{temp_timestamp}] %{http.username} %{http.thread} %{source.ip} %{http.request.method} %{url.full} %{http.version} %{http.response.status_code} %{http.response.time} %{http.response.body.bytes} %{http.request.referrer} %{user_agent.original}"
             target_prefix: ''
             ignore_missing: true
             ignore_failure: true
@@ -64,6 +66,9 @@
               log.format: "access_default"
 
     - timestamp:
-        field: timestamp
+        field: temp_timestamp
         layouts:
           - '02/Jan/2006:15:04:05 -0700'
+    - drop_fields:
+        fields: temp_timestamp
+

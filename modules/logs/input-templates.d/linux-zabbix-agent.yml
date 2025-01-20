@@ -19,14 +19,17 @@
       then:
         - dissect:
             field: "message"
-            tokenizer: "%{process.pid}:%{timestamp} %{event.message}"
+            tokenizer: "%{process.pid}:%{temp_timestamp} %{event.message}"
             target_prefix: ''
             ignore_missing: true
             ignore_failure: true
             overwrite_keys: true
             trim_values: left # as the PID can have spaces
     - timestamp:
-        field: timestamp
+        field: temp_timestamp
         layouts:
           - '20060102:150405.999'
         timezone: Local
+    - drop_fields:
+        fields: temp_timestamp
+
