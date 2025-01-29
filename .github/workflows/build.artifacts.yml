@@ -31,19 +31,26 @@ jobs:
         run: |
           npm install yaml glob
 
-      # Step 4: Run prebuild script and pass the version/tag name
+      # Step 4: Run prebuild script and pass the version/tag name as environment variable
       - name: Run Prebuild Script
         run: |
-          VERSION=${GITHUB_REF_NAME}  # This will capture the tag or branch name
-          node ./scripts/prebuild.mjs $VERSION
+          node ./scripts/prebuild.mjs
+        env:
+          VERSION: ${{ github.ref_name }} # Pass the version as an environment variable
 
-      # Step 5: Upload the JSON file specific to the version/tag
+      # Step 5: Check if the JSON file exists
+      - name: Check if the JSON file exists
+        run: |
+          ls -l ./moriohub-${{ github.ref_name }}.json
+
+      # Step 6: Upload JSON as Artifact
       - name: Upload JSON as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: moriohub-${{ github.ref_name }}.json # Name the artifact based on the branch/tag
-          path: ./moriohub-${{ github.ref_name }}.json # Path to the generated JSON file
+          name: moriohub-${{ github.ref_name }}.json
+          path: ./moriohub-${{ github.ref_name }}.json
 
+      # Step 7: Create Release (only for tag releases)
       - name: Create Release
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
