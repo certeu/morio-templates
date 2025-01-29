@@ -22,10 +22,14 @@ jobs:
         with:
           node-version: "20" # Node.js 20 (LTS/iron)
 
+      - name: Create default package.json
+        run: |
+          npm init -y
+
       # Step 3: Install dependencies
       - name: Install Dependencies
         run: |
-          npm install
+          npm install yaml glob
 
       # Step 4: Run prebuild script and pass the version/tag name
       - name: Run Prebuild Script
