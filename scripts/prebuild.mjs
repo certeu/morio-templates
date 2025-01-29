@@ -1,5 +1,5 @@
 import path from "node:path";
-import { globDir, readFile, writeJsonFile } from "./shared/src/fs.mjs";
+import { globDir, readFile, writeJsonFile } from "../shared/src/fs.mjs";
 import yaml from "yaml";
 
 const settings = {
@@ -133,4 +133,16 @@ export async function prebuildMoriohubContent(version) {
   };
 
   await writeJsonFile(`./moriohub-${version}.json`, data);
+}
+
+// Call the function with the VERSION environment variable
+const version = process.env.VERSION;
+if (version) {
+  prebuildMoriohubContent(version).catch((err) => {
+    console.error("Error during prebuild:", err);
+    process.exit(1); // Exit with error if something goes wrong
+  });
+} else {
+  console.error("VERSION environment variable is not set.");
+  process.exit(1); // Exit with error if version is not passed
 }
