@@ -1,10 +1,5 @@
 import path from "node:path";
-import {
-  globDir,
-  readFile,
-  writeFile,
-  writeJsonFile,
-} from "./shared/src/fs.mjs";
+import { globDir, readFile, writeJsonFile } from "./shared/src/fs.mjs";
 import yaml from "yaml";
 
 const settings = {
@@ -130,79 +125,12 @@ const load = {
   },
 };
 
-const pageData = (data, children, type) => `
-import Layout from '@theme/Layout'
-import { HubEntry } from '@site/src/components/moriohub/entry.js'
-import notes from '@site/hubnotes/${type}/${data.title}.mdx'
-const data = ${JSON.stringify(data, null, 2)}
-export default function HubPage() {
-  return (
-    <Layout title={data.title} description={data.about}>
-      <div className="tailwind">
-        <div className="max-w-5xl mx-auto mb-12 px-4">
-          ${children}
-        </div>
-      </div>
-    </Layout>
-  )
-}
-`;
-
 export async function prebuildMoriohubContent(version) {
-  const root = path.resolve(settings.folder);
   const data = {
     modules: await load.modules(),
     overlays: await load.overlays(),
     processors: await load.processors(),
   };
-  await writeFile(
-    `./prebuild/moriohub-${version}.mjs`,
-    `export const moriohub = ${JSON.stringify(data, null, 2)}`
-  );
+
   await writeJsonFile(`./moriohub-${version}.json`, data);
-
-  // Generate pages for modules, overlays, and processors
-  for (const [name, module] of Object.entries(data.modules)) {
-    await writeFile(
-      `./docs/hubnotes/modules/${name}.js`,
-      pageData(
-        { title: name, ...module },
-        `<HubEntry data={data} type="module" notes={notes} />`,
-        "modules"
-      )
-    );
-    await ensureFile(`./docs/hubnotes/modules/${name}.mdx`);
-  }
-  for (const [name, overlay] of Object.entries(data.overlays)) {
-    await writeFile(
-      `./docs/hubnotes/overlays/${name}.js`,
-      pageData(
-        { title: name, ...overlay },
-        `<HubEntry data={data} type="overlay" notes={notes} />`,
-        "overlays"
-      )
-    );
-    await ensureFile(`./docs/hubnotes/overlays/${name}.mdx`);
-  }
-  for (const [name, processor] of Object.entries(data.processors)) {
-    await writeFile(
-      `./docs/hubnotes/processors/${name}.js`,
-      pageData(
-        { title: name, ...processor },
-        `<HubEntry data={data} type="processor" notes={notes} />`,
-        "processors"
-      )
-    );
-    await ensureFile(`./docs/hubnotes/processors/${name}.mdx`);
-  }
-}
-
-async function ensureFile(file) {
-  let result = false;
-  try {
-    result = await readFile(file);
-  } catch (err) {
-    // This is fine
-  }
-  if (result === false) await writeFile(file, "---\n---");
 }
