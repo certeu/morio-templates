@@ -22,7 +22,10 @@ export default function metricsStreamProcessor (data, tools, topic) {
     let result
     try {
       result = modules[module](data, tools)
-      if (result) tools.cache.metricset(result, data, tools.getSettings('tap.metrics', {}))
+      if (Array.isArray(result) && result.length === 2 && typeof result[0] === 'string') {
+        tools.cache.metricset(result[0], result[1], data, tools.getSettings('tap.metrics', {}))
+      }
+      else tools.note(`[metrics] Returned data was invalid`, result)
     }
     catch(err) {
       tools.note(`[metrics] Error in module logic`, { err, data })
