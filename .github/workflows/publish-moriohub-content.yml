@@ -22,37 +22,34 @@ jobs:
         with:
           node-version: "20" # Node.js 20 (LTS/iron)
 
+      # Step 3: Create default package.json
       - name: Create default package.json
         run: |
           npm init -y
 
-      # Step 3: Install dependencies
+      # Step 4: Install dependencies
       - name: Install Dependencies
         run: |
           npm install yaml glob
 
-      # Step 4: Run prebuild script and pass the version/tag name as environment variable
+      # Step 5: Run prebuild script and pass the version/tag name as environment variable
       - name: Run Prebuild Script
         run: |
           node ./scripts/prebuild.mjs
         env:
           VERSION: ${{ github.ref_name }} # Pass the version as an environment variable
 
-      # Step 5: Check if the JSON file exists
+      # Step 6: Check if the JSON file exists
       - name: Check if the JSON file exists
         run: |
           ls -l ./moriohub-${{ github.ref_name }}.json
 
-      # Step 6: Upload JSON as Artifact
-      - name: Upload JSON as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: moriohub-${{ github.ref_name }}.json
-          path: ./moriohub-${{ github.ref_name }}.json
-
       # Step 7: Create Release (only for tag releases)
       - name: Create Release
-        if: github.event_name == 'release'
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') # Ensure it's a tag push
         uses: softprops/action-gh-release@v2
         with:
-          files: moriohub-${{ github.ref_name }}.json
+          files: ./moriohub-${{ github.ref_name }}.json # Upload JSON as release asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provide GitHub token to authenticate
+
