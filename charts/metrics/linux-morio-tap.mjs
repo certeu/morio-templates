@@ -1,62 +1,70 @@
+/*
+ * Refer to the Morio documentation for details
+ * on how to write a charts plugin
+ */
+
 export const moriodata = {
   throughput: {
     topics: 'Troughput per topic',
     processors: 'Troughput per stream processor',
+    'topics.peak': 'Peak troughput per topic',
+    'processors.peak': 'Peak troughput per stream processor',
   }
 }
 
 export default {
-  // This module only has 1 metricset: throughput
-  throughput: ({ data, templates }) => {
-    /*
-     * This generates a chart that shows throughput per topic
-     */
-    const topics = templates.charts.line
-    /*
-     * Note that the id is the only thing that is not Echarts specific
-     * Instead, we use it to differentiate between multiple charts
-     * for the same metricset
-     */
-    topics.id = 'topics'
+  throughput: ({ data, templates, clone }) => {
+    const eps = 'Events per second'
+
+    const topics = {
+      ...clone(templates.charts.line),
+      id: 'topics',
+      series: Object.keys(data[0].data.topics).map(name => ({
+        ...templates.series.line,
+        name,
+        data: data.map(entry => Math.ceil(entry.data.topics[name]/30)),
+      }))
+    }
     topics.title.text = 'Throughput per topic'
-    topics.yAxis.name = 'Events per second'
-    topics.series = Object.keys(data[0].data.topics).map(name => ({
-      ...templates.series.line,
-      name,
-      /*
-       * We are rounding up here because 0.4 messages per second is
-       * more useful when rounded to 1, rather than to 0.
-       */
-      data: data.map(entry => Math.ceil(entry.data.topics[name]/30)),
-    }))
+    topics.yAxis.name = eps
 
-    /*
-     * This generates a chart that shows throughput per topic
-     */
-    const processors = templates.charts.line
-    /*
-     * Note that the id is the only thing that is not Echarts specific
-     * Instead, we use it to differentiate between multiple charts
-     * for the same metricset
-     */
-    processors = 'processors'
-    processors.title.text = 'Throughput per stream processor'
-    processors.yAxis.name = 'Events per second'
-    processors.series = Object.keys(data[0].data.processors).map(name => ({
-      ...templates.series.line,
-      name,
-      /*
-       * We are rounding up here because 0.4 messages per second is
-       * more useful when rounded to 1, rather than to 0.
-       */
-      data: data.map(entry => Math.ceil(entry.data.processors[name]/30)),
-    }))
+    const procs = {
+      ...clone(templates.charts.line),
+      id: 'processors',
+      series: Object.keys(data[0].data.procs).map(name => ({
+        ...templates.series.line,
+        name,
+        data: data.map(entry => Math.ceil(entry.data.procs[name]/30)),
+      }))
+    }
+    procs.title.text = 'Throughput per stream processor'
+    procs.yAxis.name = eps
 
-    /*
-     * When a metricset has multiple charts, return them as an array
-     * and make sure they have an id set
-     */
-    return [topics, processors]
+    const topicsP = {
+      ...clone(templates.charts.line),
+      id: 'topics.peak',
+      series: Object.keys(data[0].data.peak.topics).map(name => ({
+        ...templates.series.line,
+        name,
+        data: data.map(entry => Math.ceil(entry.data.peak.topics[name]/30)),
+      }))
+    }
+    topicsP.title.text = 'Peak throughput per topic'
+    topicsP.yAxis.name = eps
+
+    const procsP = {
+      ...clone(templates.charts.line),
+      id: 'processors.peak',
+      series: Object.keys(data[0].data.peak.procs).map(name => ({
+        ...templates.series.line,
+        name,
+        data: data.map(entry => Math.ceil(entry.data.peak.procs[name]/30)),
+      }))
+    }
+    procsP.title.text = 'Peak throughput per stream processor'
+    procsP.yAxis.name = eps
+
+    return [topics, procs, topicsP, procsP]
   }
 }
 
