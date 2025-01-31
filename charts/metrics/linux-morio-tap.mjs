@@ -40,8 +40,8 @@ export default {
      * for the same metricset
      */
     perTopic.id = 'topics'
-    perProcessor.title.text = input.throughput.processors
-    perProcessor.yAxis.name = 'Throughput per stream processor'
+    perProcessor.title.text = 'Throughput per stream processor'
+    perTopic.yAxis.name = 'Events per second'
     perProcessor.series = Object.keys(data[0].data.processors).map(name => ({
       ...templates.series.line,
       name,
