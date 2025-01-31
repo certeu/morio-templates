@@ -1,7 +1,7 @@
 export const moriodata = {
   throughput: {
-    topics: 'Morio Tap Service: Topic troughput',
-    processors: 'Morio Tap Service: Processor troughput',
+    topics: 'Troughput per topic',
+    processors: 'Troughput per stream processor',
   }
 }
 
@@ -18,7 +18,7 @@ export default {
      * for the same metricset
      */
     perTopic.id = 'processors'
-    perTopic.title.text = info.throughput.topics
+    perTopic.title.text = 'Throughput per topic'
     perTopic.yAxis.name = 'Events per second'
     perTopic.series = Object.keys(data[0].data.topics).map(name => ({
       ...templates.series.line,
@@ -41,7 +41,7 @@ export default {
      */
     perTopic.id = 'topics'
     perProcessor.title.text = input.throughput.processors
-    perProcessor.yAxis.name = 'Events per second'
+    perProcessor.yAxis.name = 'Throughput per stream processor'
     perProcessor.series = Object.keys(data[0].data.processors).map(name => ({
       ...templates.series.line,
       name,
