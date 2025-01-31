@@ -11,16 +11,16 @@ export default {
     /*
      * This generates a chart that shows throughput per topic
      */
-    const perTopic = templates.charts.line
+    const topics = templates.charts.line
     /*
      * Note that the id is the only thing that is not Echarts specific
      * Instead, we use it to differentiate between multiple charts
      * for the same metricset
      */
-    perTopic.id = 'processors'
-    perTopic.title.text = 'Throughput per topic'
-    perTopic.yAxis.name = 'Events per second'
-    perTopic.series = Object.keys(data[0].data.topics).map(name => ({
+    topics.id = 'topics'
+    topics.title.text = 'Throughput per topic'
+    topics.yAxis.name = 'Events per second'
+    topics.series = Object.keys(data[0].data.topics).map(name => ({
       ...templates.series.line,
       name,
       /*
@@ -33,16 +33,16 @@ export default {
     /*
      * This generates a chart that shows throughput per topic
      */
-    const perProcessor = templates.charts.line
+    const processors = templates.charts.line
     /*
      * Note that the id is the only thing that is not Echarts specific
      * Instead, we use it to differentiate between multiple charts
      * for the same metricset
      */
-    perTopic.id = 'topics'
-    perProcessor.title.text = 'Throughput per stream processor'
-    perTopic.yAxis.name = 'Events per second'
-    perProcessor.series = Object.keys(data[0].data.processors).map(name => ({
+    processors = 'processors'
+    processors.title.text = 'Throughput per stream processor'
+    processors.yAxis.name = 'Events per second'
+    processors.series = Object.keys(data[0].data.processors).map(name => ({
       ...templates.series.line,
       name,
       /*
@@ -56,7 +56,7 @@ export default {
      * When a metricset has multiple charts, return them as an array
      * and make sure they have an id set
      */
-    return [perTopic, perProcessor]
+    return [topics, processors]
   }
 }
 
