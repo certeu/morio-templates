@@ -20,15 +20,15 @@
         info: A regular expression of mountpoints for which to drop filesystem events
 
 - module: system
-  period: {{ MORIO_TICK }}
-  metricsets: {{ METRICS_LINUX_SYSTEM_METRICSETS_ALWAYS }}
+  period: {| MORIO_TICK |}
+  metricsets: {| METRICS_LINUX_SYSTEM_METRICSETS_ALWAYS |}
   service.state_filter: [ failed ]
 
 - module: system
-  period: {{ METRICS_LINUX_SYSTEM_INTERVAL_FILESYSTEM }}
+  period: {| METRICS_LINUX_SYSTEM_INTERVAL_FILESYSTEM |}
   metricsets:
     - filesystem
   processors:
     - drop_event.when.regexp:
-        system.filesystem.mount_point: {{{ METRICS_LINUX_SYSTEM_MOUNTPOINTS_IGNORE_REGEX }}}
+        system.filesystem.mount_point: {|{ METRICS_LINUX_SYSTEM_MOUNTPOINTS_IGNORE_REGEX |}}
 

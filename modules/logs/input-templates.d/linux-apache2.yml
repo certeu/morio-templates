@@ -15,7 +15,7 @@
 # This collects all Apache error logs
 - type: filestream
   id: apache2_error
-  paths: {{{ LOGS_LINUX_APACHE2_ERROR_LOG_PATHS }}}
+  paths: {|{ LOGS_LINUX_APACHE2_ERROR_LOG_PATHS |}}
   processors:
     - if:
         regexp:
@@ -43,7 +43,7 @@
 # This collects all Apache access logs
 - type: filestream
   id: apache2_access
-  paths: {{{ LOGS_LINUX_APACHE2_ACCESS_LOG_PATHS }}}
+  paths: {|{ LOGS_LINUX_APACHE2_ACCESS_LOG_PATHS |}}
 
   processors:
     - if:

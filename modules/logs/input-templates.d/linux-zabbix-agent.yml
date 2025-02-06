@@ -11,7 +11,7 @@
 # Zabbix agent logs
 - type: filestream
   id: zabbix_agent
-  paths: {{{ LOGS_LINUX_ZABBIX_AGENT_LOG_PATHS }}}
+  paths: {|{ LOGS_LINUX_ZABBIX_AGENT_LOG_PATHS |}}
   processors:
     - if:
         regexp:
