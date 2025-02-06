@@ -10,7 +10,7 @@
         info: A list of files with auditd rules to load
 
 - module: auditd
-  audit_rule_files: {{{ AUDIT_LINUX_SYSTEM_RULE_FILES }}}
+  audit_rule_files: {|{ AUDIT_LINUX_SYSTEM_RULE_FILES }|}
   ignore_errors: false
 
 - module: system

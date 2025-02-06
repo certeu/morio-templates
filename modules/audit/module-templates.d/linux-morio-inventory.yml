@@ -10,7 +10,7 @@
   datasets:
     - host
     - package
-  period: {{ LINUX_MORIO_INVENTORY_INTERVAL }}
+  period: {| LINUX_MORIO_INVENTORY_INTERVAL |}
   state.period: 6h
   login.wtmp_file_pattern: /var/log/wtmp*
   login.btmp_file_pattern: /var/log/btmp*

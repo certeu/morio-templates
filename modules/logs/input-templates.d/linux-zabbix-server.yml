@@ -11,7 +11,7 @@
 # Zabbix server logs
 - type: filestream
   id: zabbix_server
-  paths: {{{ LOGS_LINUX_ZABBIX_SERVER_LOG_PATHS }}}
+  paths: {|{ LOGS_LINUX_ZABBIX_SERVER_LOG_PATHS }|}
   processors:
     - if:
         regexp:

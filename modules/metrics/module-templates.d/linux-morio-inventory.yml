@@ -6,7 +6,7 @@
         info: The interval to use for collecting metrics to build out inventory data
 
 - module: system
-  period: {{ METRICS_LINUX_MORIO_INVENTORY_INTERVAL }}
+  period: {| METRICS_LINUX_MORIO_INVENTORY_INTERVAL |}
   metricsets:
     - load
     - memory

@@ -18,7 +18,7 @@
         negate: true
         match: after
         skip_newline: true
-  paths: {{{ LOGS_LINUX_SAMBA_LOG_PATHS}}}
+  paths: {|{ LOGS_LINUX_SAMBA_LOG_PATHS }|}
 
   processors:
     - dissect:
