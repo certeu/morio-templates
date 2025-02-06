@@ -16,7 +16,7 @@
 # This collects catalina logs
 - type: filestream
   id: tomcat_catalina_default
-  paths: {|{ LOGS_LINUX_TOMCAT_CATALINA_LOG_PATHS |}}
+  paths: {|{ LOGS_LINUX_TOMCAT_CATALINA_LOG_PATHS }|}
   parsers:
     - multiline:
         type: pattern
@@ -46,7 +46,7 @@
 # This collects access logs
 - type: filestream
   id: tomcat_access_default
-  paths: {|{ LOGS_LINUX_TOMCAT_ACCESS_LOG_PATHS |}}
+  paths: {|{ LOGS_LINUX_TOMCAT_ACCESS_LOG_PATHS }|}
 
   processors:
 
