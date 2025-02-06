@@ -10,7 +10,7 @@
 
 - type: filestream
   id: docker_everything
-  paths: {|{ LOGS_LINUX_DOCKER_LOG_PATHS |}}
+  paths: {|{ LOGS_LINUX_DOCKER_LOG_PATHS }|}
 
   processors:
 
