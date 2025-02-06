@@ -30,5 +30,5 @@
     - filesystem
   processors:
     - drop_event.when.regexp:
-        system.filesystem.mount_point: {|{ METRICS_LINUX_SYSTEM_MOUNTPOINTS_IGNORE_REGEX |}}
+        system.filesystem.mount_point: {|{ METRICS_LINUX_SYSTEM_MOUNTPOINTS_IGNORE_REGEX }|}
 
