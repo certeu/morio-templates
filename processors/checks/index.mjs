@@ -31,7 +31,7 @@ export default function checksStreamProcessor (data, tools, topic) {
   /*
    * Update the cache
    */
-  if (tools.getSettings('tap.checks.cache', false)) tools.cache.healthcheck(summary, data, tools.getSettings('tap.checks', {}))
+  if (tools.getSettings('tap.checks.cache', false)) tools.cache.healthcheck(summary, tools.getSettings('tap.checks', {}))
 
   /*
    * Escalate if needed
@@ -77,6 +77,11 @@ export default function checksStreamProcessor (data, tools, topic) {
     }
   }
 }
+
+/*
+ * Give this processor an id so we can use that in the logs
+ */
+checksStreamProcessor.id = 'checks'
 
 /*
  * Takes healthcheck data and returns and array with the key observations
