@@ -22,17 +22,18 @@ export default function metricsStreamProcessor (data, tools, topic) {
     let result
     try {
       result = modules[module](data, tools)
-      if (Array.isArray(result) && result.length === 2 && typeof result[0] === 'string') {
+      if (!result) return
+      else if (Array.isArray(result) && result.length === 2 && typeof result[0] === 'string') {
         tools.cache.metricset(result[0], result[1], data, tools.getSettings('tap.metrics', {}))
       }
       else tools.note(`[metrics] Returned data was invalid`, result)
     }
     catch(err) {
-      tools.note(`[metrics] Error in module logic`, { err, data })
+      tools.note(`[metrics] Error in module logic`, { err, result, data })
     }
   }
   else if (tools.getSettings('tap.metrics.log_unhandled', false)) {
-    tools.note(`[metrics] Cannot process message (${module})`, data)
+    tools.note(`[metrics] Cannot process message (${module})`, {data, modules: Object.keys(modules)})
   }
 
   /*
@@ -40,6 +41,11 @@ export default function metricsStreamProcessor (data, tools, topic) {
    */
   //if (data.metricset?.name === 'throughput') tools.cache.metricset(data.morio.tap.throughput, data, tools.getSettings('tap.metrics', {}))
 }
+
+/*
+ * Give this processor an id so we can use that in the logs
+ */
+metricsStreamProcessor.id = 'metrics'
 
 /*
  * This is used for both the UI and to generate the default settings

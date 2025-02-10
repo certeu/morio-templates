@@ -37,7 +37,7 @@ export default function auditStreamProcessor (data, tools, topic) {
   else if (tools.getSettings('tap.processors.audit.log_unhandled', false)) {
     tools.note(`[audit] Cannot process message`, data)
   }
-
+  else tools.log.debug(`[audit] No module for: ${module}`)
 }
 
 /*

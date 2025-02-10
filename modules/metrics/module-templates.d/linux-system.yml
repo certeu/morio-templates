@@ -12,23 +12,28 @@
           - diskio
           - load
           - memory
-          - network
           - service
+          - network_summary
+          - process_summary
+          - socket_summary
         info: The metricsets to collect on every tick
       METRICS_LINUX_SYSTEM_MOUNTPOINTS_IGNORE_REGEX:
         dflt: '^/(snap|sys|cgroup|proc|dev|host|lib)($|/)'
         info: A regular expression of mountpoints for which to drop filesystem events
 
 - module: system
-  period: {| MORIO_TICK |}
-  metricsets: {| METRICS_LINUX_SYSTEM_METRICSETS_ALWAYS |}
-  service.state_filter: [ failed ]
+  period: "{| MORIO_TICK |}"
+  metricsets: {|{ METRICS_LINUX_SYSTEM_METRICSETS_ALWAYS }|}
+  service:
+    state_filter: [ failed ]
 
 - module: system
   period: {| METRICS_LINUX_SYSTEM_INTERVAL_FILESYSTEM |}
   metricsets:
-    - filesystem
+    - fsstat
   processors:
-    - drop_event.when.regexp:
-        system.filesystem.mount_point: {|{ METRICS_LINUX_SYSTEM_MOUNTPOINTS_IGNORE_REGEX }|}
+    - drop_event:
+        when:
+          regexp:
+            system.filesystem.mount_point: {|{ METRICS_LINUX_SYSTEM_MOUNTPOINTS_IGNORE_REGEX }|}
 
